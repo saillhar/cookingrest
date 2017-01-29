@@ -31,7 +31,28 @@ app.get('/user', function(req, resp){
             })
         }
     })
-})
+});
+app.get('/recipe', function(req, resp){
+    connection.getConnection(function(error, tempCont){
+        if (!!error) {
+            tempCont.release();
+            console.log('Error');
+        } else {
+            console.log('Connected');
+            tempCont.query("SELECT * from recipe", function (error, rows, fields){
+                if(!!error){
+                    console.log('Error in the query');
+                } else {
+                    resp.setHeader('Access-Control-Allow-Origin', '*');
+                    resp.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+                    resp.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+                    resp.setHeader('Access-Control-Allow-Credentials', false);
+                    resp.json(rows);
+                }
+            })
+        }
+    })
+});
 app.listen(1337);
 
 /*
